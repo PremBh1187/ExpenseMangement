@@ -18,4 +18,14 @@ router.route('/:id')
 .put(protect, updateExpense)
 .delete(protect, deleteExpense);
 
+// routes/userRoutes.js
+router.get('/profile', protect, (req, res) => {
+  res.json({
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email
+  });
+});
+
+
 module.exports = router;

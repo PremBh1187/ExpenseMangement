@@ -4,20 +4,20 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";   // ✅ ADD THIS
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* DEFAULT HOME PAGE */}
-        <Route path="/" element={<Home />} />
 
-        {/* AUTH ROUTES */}
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* PROTECTED DASHBOARD */}
+        {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
@@ -27,8 +27,15 @@ function App() {
           }
         />
 
-        {/* OPTIONAL: HANDLE UNKNOWN ROUTES */}
-        <Route path="*" element={<Home />} />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );

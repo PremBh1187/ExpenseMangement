@@ -1,37 +1,48 @@
-import { useState } from 'react';
-import API from '../services/api';
-import { CATEGORIES } from '../utils/categories';
+import { useState } from "react";
+import API from "../services/api";
 
-function ExpenseForm({ onAdd}){
-    const [expense, setExpense] = useState({
-        title: '',
-        amount: '',
-        category: 'Food'
-    });
+function ExpenseForm({ onAdd }) {
+  const [form, setForm] = useState({
+    title: "",
+    amount: "",
+    category: "Food",
+    date: ""
+  });
 
-    const handleChange = (e) => {
-        setExpense({ ...expense, [e.target.name]: e.target.value});
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      ...form,
+      amount: Number(form.amount) // ✅ FIX
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const res = await API.post('/expenses', expense);
-        onAdd(res.data);
-        setExpense({ title: '', amount: '', category: 'Food'});
-    };
+    const res = await API.post("/expenses", payload);
+    onAdd(res.data);
 
-    return(
-        <form onSubmit={handleSubmit}>
-            <input name="title" placeholder='Title' value={expense.title} onChange={handleChange} />
-            <input name="amout" type='number' placeholder='Amount' value={expense.amount} onChange={handleChange} />
-            <select name="category" value={expense.category} onChange={handleChange}>
-                {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                ))}
-            </select>
-            <button type='submit'>Add Expense</button>
-        </form>
-    );
+    setForm({ title: "", amount: "", category: "Food", date: "" });
+  };
+
+  return (
+    <form onSubmit={submitHandler}>
+      <input name="title" placeholder="Title" value={form.title} onChange={handleChange} />
+      <input name="amount" type="number" placeholder="Amount" value={form.amount} onChange={handleChange} />
+      <input name="date" type="date" value={form.date} onChange={handleChange} />
+
+      <select name="category" value={form.category} onChange={handleChange}>
+        <option>Food</option>
+        <option>Shopping</option>
+        <option>Travel</option>
+        <option>Bills</option>
+      </select>
+
+      <button>Add Expense</button>
+    </form>
+  );
 }
 
 export default ExpenseForm;
